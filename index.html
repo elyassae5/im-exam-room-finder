@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Find your room for the Information Management final exam by typing your surname." />
-  <title>IM Final Exam — Room Finder</title>
+  <meta name="description" content="Type your surname, find your IM exam room, and grab a confetti-powered pep talk. No more wandering the halls." />
+  <title>IM Exam Room Finder · don't panic 🎓</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -309,31 +309,31 @@
   <canvas id="confetti" aria-hidden="true"></canvas>
   <main class="shell">
     <header>
-      <span class="badge">🎓 Information Management · CS</span>
+      <span class="badge">🎓 Information Management · CS · Room Wizardry™</span>
       <h1>Final Exam Room Finder</h1>
-      <p class="subtitle">Type your <strong>surname</strong> to find your room — then go ace it. 🚀</p>
+      <p class="subtitle">Type your <strong>surname</strong> — we'll handle the one bit of alphabet maths the exam won't test you on. 🤓</p>
     </header>
 
     <div class="quote-rotator" id="quote" aria-hidden="true"></div>
 
     <section class="card">
       <div id="nameField">
-        <label class="field-label" for="surname">Your surname</label>
+        <label class="field-label" for="surname">Your surname (yes, the family one)</label>
         <div class="input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="surname" placeholder="e.g. Müller" autocomplete="off" autocapitalize="words" spellcheck="false" autofocus />
+          <input type="text" id="surname" placeholder="e.g. Müller, Skywalker, Beyoncé…" autocomplete="off" autocapitalize="words" spellcheck="false" autofocus />
         </div>
       </div>
 
       <label class="extra" for="extratime">
         <input type="checkbox" id="extratime" />
-        <span class="txt">I have extra time<small>Extra-time students sit in HG-KC07 regardless of surname.</small></span>
+        <span class="txt">I have extra time ⏳<small>Extra-time legends head to HG-KC07 — no surname required. 👑</small></span>
       </label>
 
       <div class="result empty" id="result" role="status" aria-live="polite">
         <div class="eyebrow">Your room</div>
         <div class="room" id="roomCode">Start typing…</div>
-        <div class="detail" id="roomDetail">We'll show your room as soon as you enter your surname.</div>
+        <div class="detail" id="roomDetail">Type your surname and your room appears like magic. 🪄</div>
         <div class="cheer" id="cheer" aria-hidden="true"></div>
       </div>
 
@@ -342,22 +342,22 @@
           <span class="dot a"></span>
           <div>
             <div class="room-code">IN-0B60</div>
-            <div class="room-rule">Surnames starting <strong>A – P</strong></div>
+            <div class="room-rule">Surnames starting <strong>A – P</strong> · front half of the alphabet 🅰️</div>
           </div>
         </div>
         <div class="key-row">
           <span class="dot b"></span>
           <div>
             <div class="room-code">HG-KC07</div>
-            <div class="room-rule">Surnames starting <strong>Q – Z</strong> · and all extra-time students</div>
+            <div class="room-rule">Surnames starting <strong>Q – Z</strong> · the back-row crew 😎 · + all extra-time students</div>
           </div>
         </div>
       </div>
     </section>
 
     <footer>
-      Unsure? Double-check with your professor or the official exam schedule.<br />
-      This page is an unofficial helper.
+      Lovingly over-engineered for a 2-room problem. 🛠️<br />
+      Unofficial helper — if it sends you to the wrong room, blame the alphabet, then check with your professor. 🙃
     </footer>
   </main>
 
@@ -374,15 +374,18 @@
     const QUOTES = [
       "You've got this. 💪",
       "Believe you can and you're halfway there. ✨",
-      "Success is small efforts, repeated daily. 📚",
+      "The exam should honestly be a little scared of you. 😤",
       "Don't watch the clock — do what it does, keep going. ⏰",
       "You didn't come this far to only come this far. 🚀",
-      "Trust every hour you put in. 🌟",
+      "Cramming is just aggressive last-minute learning. 📚💨",
       "Stay calm and ace it. 🧠",
-      "Your hard work is about to pay off. 🔥",
+      "Plot twist: you actually studied. 🍿",
       "Breathe in confidence, breathe out doubt. 🌬️",
-      "Every expert was once a beginner. 🌱",
+      "Coffee is a completely valid personality trait today. ☕",
       "Pressure makes diamonds. 💎",
+      "May your answers be right and your handwriting legible. ✍️",
+      "You're the main character. Go act like it. 🎬",
+      "Worst case you learn something, best case you flex. 😎",
       "One question at a time. You'll fly through it. 🕊️"
     ];
 
@@ -392,10 +395,12 @@
       "You're ready for this. Go shine! ✨",
       "Deep breath… you've got this! 💪",
       "Walk in like you own the place. 😎",
-      "Time to show what you know! 🚀",
-      "Stay sharp, stay calm, smash it! 🔥",
-      "We're rooting for you! 🌟",
-      "Go make it look easy. 😏"
+      "Go forth and bamboozle that exam. 🤓",
+      "You vs. the exam — and you're the favourite. 🥊",
+      "Brain: fully charged. 🔋",
+      "Make it look illegally easy. 😏",
+      "Channel your inner main character. 🎬",
+      "We're rooting for you! 🌟"
     ];
 
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -436,7 +441,7 @@
       // Extra-time students sit in HG-KC07 no matter what — no surname needed.
       if (extra.checked) {
         nameField.classList.add('hidden');
-        showRoom('room-b', 'HG-KC07', 'You have <strong>extra time</strong>, so you sit in <strong>HG-KC07</strong> — no need to enter your surname.');
+        showRoom('room-b', 'HG-KC07', 'Extra-time VIP detected. 👑 You sit in <strong>HG-KC07</strong> — no surname required.');
         return;
       }
       nameField.classList.remove('hidden');
@@ -445,22 +450,22 @@
 
       // No usable input yet.
       if (!name) {
-        showInfo('Start typing…', "Enter your surname and we'll show your room — with a little good luck. ✨");
+        showInfo('Ready when you are…', "Type your surname and watch the magic happen — it's literally just reading one letter. ✨");
         return;
       }
 
       const letter = firstLetter(name);
 
       if (!letter) {
-        showInfo('Hmm…', "We couldn't read a starting letter. Please type your surname using the Latin alphabet.");
+        showInfo('Erm… 🤔', "That's… not a letter we recognise. 🕵️ Try typing your surname in the Latin alphabet (A–Z).");
         return;
       }
 
       // A–P  ->  IN-0B60   |   Q–Z  ->  HG-KC07
       if (letter <= 'P') {
-        showRoom('room-a', 'IN-0B60', 'Your surname starts with <strong>' + letter + '</strong> (A–P), so your room is <strong>IN-0B60</strong>.');
+        showRoom('room-a', 'IN-0B60', 'Surname starts with <strong>' + letter + '</strong> — welcome to team A–P. 🎯 Your room: <strong>IN-0B60</strong>.');
       } else {
-        showRoom('room-b', 'HG-KC07', 'Your surname starts with <strong>' + letter + '</strong> (Q–Z), so your room is <strong>HG-KC07</strong>.');
+        showRoom('room-b', 'HG-KC07', 'Surname starts with <strong>' + letter + '</strong> — proud member of team Q–Z. 🎯 Your room: <strong>HG-KC07</strong>.');
       }
     }
 
