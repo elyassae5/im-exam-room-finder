@@ -105,6 +105,9 @@
 
     .input-wrap { position: relative; }
 
+    #nameField { transition: opacity 0.25s ease; }
+    #nameField.hidden { display: none; }
+
     .input-wrap svg {
       position: absolute;
       left: 18px;
@@ -254,10 +257,12 @@
     </header>
 
     <section class="card">
-      <label class="field-label" for="surname">Your surname</label>
-      <div class="input-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="surname" placeholder="e.g. Müller" autocomplete="off" autocapitalize="words" spellcheck="false" autofocus />
+      <div id="nameField">
+        <label class="field-label" for="surname">Your surname</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="surname" placeholder="e.g. Müller" autocomplete="off" autocapitalize="words" spellcheck="false" autofocus />
+        </div>
       </div>
 
       <label class="extra" for="extratime">
@@ -297,6 +302,7 @@
 
   <script>
     const input = document.getElementById('surname');
+    const nameField = document.getElementById('nameField');
     const extra = document.getElementById('extratime');
     const result = document.getElementById('result');
     const roomCode = document.getElementById('roomCode');
@@ -310,8 +316,17 @@
     }
 
     function render() {
+      // Extra-time students sit in HG-KC07 no matter what — no surname needed.
+      if (extra.checked) {
+        nameField.classList.add('hidden');
+        result.className = 'result room-b show';
+        roomCode.textContent = 'HG-KC07';
+        roomDetail.innerHTML = 'You have <strong>extra time</strong>, so you sit in <strong>HG-KC07</strong> — no need to enter your surname.';
+        return;
+      }
+      nameField.classList.remove('hidden');
+
       const name = input.value.trim();
-      const hasExtraTime = extra.checked;
 
       // No usable input yet.
       if (!name) {
@@ -330,14 +345,6 @@
         return;
       }
 
-      // Extra-time students always go to HG-KC07.
-      if (hasExtraTime) {
-        result.className = 'result room-b show';
-        roomCode.textContent = 'HG-KC07';
-        roomDetail.innerHTML = 'You have <strong>extra time</strong>, so you sit in <strong>HG-KC07</strong> — regardless of your surname.';
-        return;
-      }
-
       // A–P  ->  IN-0B60   |   Q–Z  ->  HG-KC07
       if (letter <= 'P') {
         result.className = 'result room-a show';
@@ -351,7 +358,10 @@
     }
 
     input.addEventListener('input', render);
-    extra.addEventListener('change', render);
+    extra.addEventListener('change', function () {
+      render();
+      if (!extra.checked) input.focus();
+    });
     render();
   </script>
 </body>
