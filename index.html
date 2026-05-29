@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Find your room for the Information Management final exam by typing your surname." />
+  <title>IM Final Exam — Room Finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #1e1b4b;
+      --bg-3: #312e81;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #818cf8;
+      --room-a: #34d399;   /* IN-0B60  (A–P) */
+      --room-b: #f472b6;   /* HG-KC07  (Q–Z + extra time) */
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px circle at 12% 18%, rgba(129, 140, 248, 0.25), transparent 42%),
+        radial-gradient(900px circle at 88% 82%, rgba(244, 114, 182, 0.20), transparent 45%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 560px;
+      animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header { text-align: center; margin-bottom: 28px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--accent);
+      background: rgba(129, 140, 248, 0.12);
+      border: 1px solid rgba(129, 140, 248, 0.25);
+      padding: 7px 14px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(26px, 6vw, 38px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 12px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 26px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.55);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px 18px 16px 50px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]::placeholder { color: #64748b; }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.18);
+    }
+
+    .extra {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .extra:hover { background: rgba(15, 23, 42, 0.6); }
+
+    .extra input { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+
+    .extra .txt { font-size: 15px; }
+    .extra .txt small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+    /* ---- Result ---- */
+    .result {
+      margin-top: 22px;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      transition: opacity 0.35s, transform 0.35s;
+      pointer-events: none;
+      border: 1px solid transparent;
+    }
+
+    .result.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+    .result .eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .result .room {
+      font-size: clamp(40px, 11vw, 60px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .result .detail { font-size: 15px; color: var(--text); opacity: 0.92; line-height: 1.5; }
+    .result .detail strong { font-weight: 700; }
+
+    .result.room-a { background: rgba(52, 211, 153, 0.10); border-color: rgba(52, 211, 153, 0.35); }
+    .result.room-a .room { color: var(--room-a); }
+    .result.room-b { background: rgba(244, 114, 182, 0.10); border-color: rgba(244, 114, 182, 0.35); }
+    .result.room-b .room { color: var(--room-b); }
+    .result.empty  { background: rgba(148, 163, 184, 0.08); border-color: rgba(148, 163, 184, 0.25); }
+    .result.empty .room { color: var(--muted); font-size: 28px; font-weight: 700; }
+
+    .pill {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    /* ---- Reference key ---- */
+    .key { margin-top: 26px; display: grid; gap: 12px; }
+
+    .key-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid var(--card-border);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .dot.a { background: var(--room-a); }
+    .dot.b { background: var(--room-b); }
+
+    .key-row .room-code { font-weight: 700; font-size: 15px; }
+    .key-row .room-rule { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+
+    footer {
+      text-align: center;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 20px; }
+      .result { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <span class="badge">🎓 Information Management · CS</span>
+      <h1>Final Exam Room Finder</h1>
+      <p class="subtitle">Type your <strong>surname</strong> (family name) to see which room you sit your exam in.</p>
+    </header>
+
+    <section class="card">
+      <label class="field-label" for="surname">Your surname</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="surname" placeholder="e.g. Müller" autocomplete="off" autocapitalize="words" spellcheck="false" autofocus />
+      </div>
+
+      <label class="extra" for="extratime">
+        <input type="checkbox" id="extratime" />
+        <span class="txt">I have extra time<small>Extra-time students sit in HG-KC07 regardless of surname.</small></span>
+      </label>
+
+      <div class="result empty" id="result" role="status" aria-live="polite">
+        <div class="eyebrow">Your room</div>
+        <div class="room" id="roomCode">Start typing…</div>
+        <div class="detail" id="roomDetail">We'll show your room as soon as you enter your surname.</div>
+      </div>
+
+      <div class="key">
+        <div class="key-row">
+          <span class="dot a"></span>
+          <div>
+            <div class="room-code">IN-0B60</div>
+            <div class="room-rule">Surnames starting <strong>A – P</strong></div>
+          </div>
+        </div>
+        <div class="key-row">
+          <span class="dot b"></span>
+          <div>
+            <div class="room-code">HG-KC07</div>
+            <div class="room-rule">Surnames starting <strong>Q – Z</strong> · and all extra-time students</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Unsure? Double-check with your professor or the official exam schedule.<br />
+      This page is an unofficial helper.
+    </footer>
+  </main>
+
+  <script>
+    const input = document.getElementById('surname');
+    const extra = document.getElementById('extratime');
+    const result = document.getElementById('result');
+    const roomCode = document.getElementById('roomCode');
+    const roomDetail = document.getElementById('roomDetail');
+
+    // First alphabetic character, with accents stripped (Müller -> M, Çelik -> C, Élise -> E).
+    function firstLetter(name) {
+      const normalized = name.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const match = normalized.match(/[A-Za-z]/);
+      return match ? match[0].toUpperCase() : null;
+    }
+
+    function render() {
+      const name = input.value.trim();
+      const hasExtraTime = extra.checked;
+
+      // No usable input yet.
+      if (!name) {
+        result.className = 'result empty show';
+        roomCode.textContent = 'Start typing…';
+        roomDetail.textContent = "We'll show your room as soon as you enter your surname.";
+        return;
+      }
+
+      const letter = firstLetter(name);
+
+      if (!letter) {
+        result.className = 'result empty show';
+        roomCode.textContent = 'Hmm…';
+        roomDetail.innerHTML = "We couldn't read a starting letter. Please type your surname using the Latin alphabet.";
+        return;
+      }
+
+      // Extra-time students always go to HG-KC07.
+      if (hasExtraTime) {
+        result.className = 'result room-b show';
+        roomCode.textContent = 'HG-KC07';
+        roomDetail.innerHTML = 'You have <strong>extra time</strong>, so you sit in <strong>HG-KC07</strong> — regardless of your surname.';
+        return;
+      }
+
+      // A–P  ->  IN-0B60   |   Q–Z  ->  HG-KC07
+      if (letter <= 'P') {
+        result.className = 'result room-a show';
+        roomCode.textContent = 'IN-0B60';
+        roomDetail.innerHTML = 'Your surname starts with <strong>' + letter + '</strong> (A–P), so your room is <strong>IN-0B60</strong>.';
+      } else {
+        result.className = 'result room-b show';
+        roomCode.textContent = 'HG-KC07';
+        roomDetail.innerHTML = 'Your surname starts with <strong>' + letter + '</strong> (Q–Z), so your room is <strong>HG-KC07</strong>.';
+      }
+    }
+
+    input.addEventListener('input', render);
+    extra.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
